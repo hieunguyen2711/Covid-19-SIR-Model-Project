@@ -46,6 +46,18 @@ plt.title("Japan Covid-19 data from 1/22/2020")
 
 plt.show()
 
+plt.figure(2)
+plt.xlabel('Days')
+plt.ylabel('Fraction of Population')
+plt.plot(x, Jsusceptible[:350])
+plt.legend(['Actual Susceptible'])
+
+
+
+plt.title("Japan Covid-19 data from 1/22/2020")
+
+plt.show()
+
 
     
 
