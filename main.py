@@ -108,9 +108,37 @@ R0 = 0
 beta = 0.07
 gamma = 0.06
 
-Y_test = SIR(S0, I0, R0, beta, gamma)
+
 
 ###### part 3e
+
+
+def lsquare(x, args):
+    beta, gamma = x
+    S0, I0,R0, Jsusceptible, Jinfected, Jremoved = args
+    Y = SIR(S0, I0,R0, beta, gamma)
+    
+    S = Y[0, :]
+    I = Y[1, :]
+    R = Y[2, :]
+    
+    T = 350 
+    ls = (np.linalg.norm(S - Jsusceptible[0:T]) + 
+          np.linalg.norm(I - Jinfected[0:T]) + 
+          np.linalg.norm(R - Jremoved[0:T]))
+    
+    return ls
+
+initial_guess = [0.1,0.05]
+args = [S0, I0, R0, Jsusceptible, Jinfected, Jremoved]
+result = optimize.minimize(lsquare ,initial_guess, args)
+optimal = result.x
+beta = optimal[0]
+gamma = optimal[1]
+
+
+Y_test = SIR(S0, I0, R0, beta, gamma)
+
 plt.figure(3)
 plt.xlabel('Days')
 plt.ylabel('Fraction of Population')
@@ -135,6 +163,31 @@ plt.legend(['Actual Susceptible', 'Susceptible'])
 plt.title("Japan Covid-19 data from 1/22/2020")
 
 plt.show()
+
+
+
+R_0 = beta / gamma
+print("This is the value of R_0:", R_0)
+
+avg_recovered = 1 / gamma
+print(avg_recovered)
+########## Part 5: Final question:
+
+    # a) What is the value of R0?
+       # The value of R0 is 1.1398935681411384
+       
+       
+    # b) What does the model predict about the spread of Covid-19 in Japan?
+        # The model predicts that over the course of one year, a lot of people 
+        # in Japan were still susceptible, slightly drop from 100% to 99.8%. Also
+        # The percentage of people who either died or recovered were increasing 
+        # at a higher rate that the newly infected people. Therefore, we can conclude
+        # that Covid - 19 was really limited in Japan from 1/22/2020.
+    
+    # c) How long was the average infection (in days)?
+        # Since gamma represents the rate of how many people recover each day, then
+        # the average infection days will be 1 / gamm = 11.868291076156606 days.
+    
 
 
 
